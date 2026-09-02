@@ -1,0 +1,1241 @@
+﻿/* ===== Genomic Intelligence System â€” App Styles ===== */
+
+/* ===== Root Layout ===== */
+.gis-app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  background-color: var(--background);
+}
+
+/* ===== Top Navbar ===== */
+.top-navbar {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 50;
+  height: 64px;
+  background: rgba(18, 20, 20, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--outline-variant);
+}
+
+.navbar-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 var(--space-lg);
+  height: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+}
+
+.navbar-left {
+  display: flex;
+  align-items: center;
+  gap: var(--space-lg);
+}
+
+.brand-text {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--on-surface);
+  letter-spacing: -0.01em;
+}
+
+/* Omnibar */
+.omnibar-wrapper {
+  position: relative;
+  width: 384px;
+}
+
+.omnibar-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--on-surface-variant);
+  pointer-events: none;
+}
+
+.omnibar-input {
+  width: 100%;
+  background: var(--surface-container-high);
+  border: 1px solid var(--outline-variant);
+  border-radius: var(--radius-full);
+  padding: 8px 16px 8px 36px;
+  color: var(--on-surface);
+  font-size: 14px;
+  line-height: 20px;
+  outline: none;
+  transition: all 0.2s ease;
+  font-family: 'Inter', sans-serif;
+}
+
+.omnibar-input::placeholder {
+  color: var(--on-surface-variant);
+}
+
+.omnibar-input:focus {
+  border-color: var(--secondary);
+  box-shadow: 0 0 0 1px var(--secondary);
+}
+
+.omnibar-glow {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-full);
+  background: rgba(97, 219, 180, 0.1);
+  opacity: 0;
+  pointer-events: none;
+  filter: blur(8px);
+  transition: opacity 0.2s;
+}
+
+.omnibar-wrapper:focus-within .omnibar-glow {
+  opacity: 1;
+}
+
+/* Navbar Nav */
+.navbar-nav {
+  display: flex;
+  gap: var(--space-lg);
+  align-items: center;
+}
+
+.nav-link {
+  color: var(--on-surface-variant);
+  font-size: 16px;
+  line-height: 24px;
+  text-decoration: none;
+  padding: 8px 12px;
+  border-radius: var(--radius-md);
+  transition: all 0.15s ease;
+  cursor: pointer;
+}
+
+.nav-link:hover {
+  color: var(--on-surface);
+  background: var(--surface-container-high);
+}
+
+.nav-link.active {
+  color: var(--primary);
+  font-weight: 700;
+  border-bottom: 2px solid var(--primary);
+  border-radius: 0;
+  padding-bottom: 6px;
+}
+
+/* Navbar Right */
+.navbar-right {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.icon-btn {
+  color: var(--on-surface-variant);
+  background: transparent;
+  border: none;
+  padding: 8px;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+}
+
+.icon-btn:hover {
+  color: var(--on-surface);
+  background: var(--surface-container-high);
+}
+
+.user-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--outline-variant);
+  background: var(--surface-container-high);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--on-surface);
+}
+
+/* ===== Main Layout ===== */
+.main-layout {
+  display: flex;
+  flex: 1;
+  padding-top: 64px;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* ===== Workspace ===== */
+.workspace {
+  flex: 1;
+  background-color: var(--primary-container);
+  overflow-y: auto;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-md);
+  gap: 8px;
+}
+
+/* Context Header */
+.context-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: var(--space-sm);
+  padding: 0 var(--space-sm);
+}
+
+.context-title {
+  font-size: 32px;
+  line-height: 40px;
+  letter-spacing: -0.01em;
+  font-weight: 600;
+  color: var(--on-surface);
+  margin-bottom: 4px;
+}
+
+.context-subtitle {
+  color: var(--on-surface-variant);
+}
+
+.context-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-outline {
+  padding: 6px 16px;
+  border-radius: var(--radius);
+  background: var(--surface-container);
+  border: 1px solid var(--outline-variant);
+  color: var(--on-surface);
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: 0.05em;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-outline:hover {
+  background: var(--surface-container-high);
+}
+
+.btn-accent {
+  padding: 6px 16px;
+  border-radius: var(--radius);
+  background: var(--secondary);
+  border: none;
+  color: var(--on-secondary);
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-accent:hover:not(:disabled) {
+  filter: brightness(1.1);
+}
+
+.btn-accent:disabled {
+  background: var(--surface-container-high);
+  color: var(--outline);
+  cursor: not-allowed;
+}
+
+/* Tracks Container */
+.tracks-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  background: var(--outline-variant);
+  border: 1px solid var(--outline-variant);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  flex: 1;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+/* ===== Copilot Sidebar ===== */
+.copilot-sidebar {
+  width: var(--sidebar-width);
+  background: var(--surface-container-low);
+  border-left: 1px solid var(--outline-variant);
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-md) var(--space-sm);
+  flex-shrink: 0;
+  animation: slideInRight 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes slideInRight {
+  from { transform: translateX(20px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+/* Copilot Header */
+.copilot-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: var(--space-lg);
+  padding: 0 8px;
+}
+
+.copilot-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  border: 1px solid var(--outline-variant);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: var(--secondary);
+}
+
+.copilot-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--on-surface);
+  line-height: 1.2;
+}
+
+.copilot-status {
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  font-weight: 500;
+  color: var(--on-surface-variant);
+}
+
+.copilot-close {
+  margin-left: auto;
+  font-size: 14px;
+}
+
+/* Copilot Tabs */
+.copilot-tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: var(--space-md);
+  border-bottom: 1px solid var(--outline-variant);
+  padding: 0 8px 8px;
+  overflow-x: auto;
+}
+
+.copilot-tab {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border-radius: var(--radius-lg);
+  border: none;
+  background: transparent;
+  color: var(--on-surface-variant);
+  font-size: 12px;
+  letter-spacing: 0.05em;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.copilot-tab:hover {
+  background: var(--surface-container-highest);
+  color: var(--on-surface);
+}
+
+.copilot-tab.active {
+  background: var(--surface-container-high);
+  color: var(--primary);
+  font-weight: 700;
+}
+
+/* Chat Messages */
+.copilot-chat {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  padding: 0 8px;
+}
+
+.chat-msg {
+  display: flex;
+  gap: 12px;
+  animation: fadeSlideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.chat-msg.user {
+  justify-content: flex-end;
+}
+
+.chat-avatar-ai {
+  width: 24px;
+  height: 24px;
+  border-radius: var(--radius-full);
+  background: var(--secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 4px;
+  color: var(--on-secondary);
+}
+
+.chat-bubble {
+  padding: 12px;
+  border: 1px solid var(--outline-variant);
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--on-surface);
+}
+
+.chat-bubble.ai {
+  background: var(--surface-container);
+  border-radius: 16px 16px 16px 4px;
+}
+
+.chat-bubble.user {
+  background: var(--surface-container-high);
+  border-radius: 16px 16px 4px 16px;
+  max-width: 85%;
+}
+
+.chat-bubble p {
+  margin: 0;
+}
+
+.chat-bubble strong {
+  color: var(--primary);
+}
+
+/* Typing Indicator */
+.typing-indicator {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 0;
+}
+
+.typing-indicator span {
+  width: 6px;
+  height: 6px;
+  background: var(--on-surface-variant);
+  border-radius: var(--radius-full);
+  animation: bounce 1.2s infinite;
+}
+
+.typing-indicator span:nth-child(2) { animation-delay: 0.1s; }
+.typing-indicator span:nth-child(3) { animation-delay: 0.2s; }
+
+@keyframes bounce {
+  0%, 80%, 100% { transform: scale(0.8); opacity: 0.5; }
+  40% { transform: scale(1.2); opacity: 1; }
+}
+
+/* Copilot Input */
+.copilot-input-area {
+  margin-top: var(--space-md);
+  padding-top: var(--space-md);
+  border-top: 1px solid var(--outline-variant);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+.analyze-btn {
+  width: 100%;
+  padding: 8px;
+  background: var(--surface-container);
+  border: 1px solid var(--outline-variant);
+  border-radius: var(--radius-lg);
+  color: var(--on-surface);
+  font-size: 12px;
+  letter-spacing: 0.05em;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.analyze-btn:hover {
+  background: var(--surface-container-highest);
+}
+
+.copilot-input-wrapper {
+  position: relative;
+}
+
+.copilot-text-input {
+  width: 100%;
+  background: var(--surface-container);
+  border: 1px solid var(--outline-variant);
+  border-radius: var(--radius-xl);
+  padding: 12px 40px 12px 16px;
+  color: var(--on-surface);
+  font-size: 14px;
+  line-height: 20px;
+  outline: none;
+  font-family: 'Inter', sans-serif;
+  transition: border-color 0.15s ease;
+}
+
+.copilot-text-input::placeholder {
+  color: var(--on-surface-variant);
+}
+
+.copilot-text-input:focus {
+  border-color: var(--secondary);
+}
+
+.send-btn {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 4px;
+  background: transparent;
+  border: none;
+  color: var(--on-surface-variant);
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+
+.send-btn:hover {
+  color: var(--secondary);
+}
+
+/* Sidebar Toggle */
+.sidebar-toggle {
+  position: fixed;
+  top: 80px;
+  right: var(--space-md);
+  z-index: 40;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-lg);
+  background: var(--surface-container-high);
+  border: 1px solid var(--outline-variant);
+  color: var(--secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.sidebar-toggle:hover {
+  background: var(--surface-container-highest);
+}
+
+/* ===== Genomic Canvas Overrides ===== */
+.genomic-canvas {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+}
+
+.canvas-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  gap: var(--space-md);
+  text-align: center;
+  padding: var(--space-xl);
+  background: var(--surface-container);
+}
+
+.empty-icon { font-size: 48px; opacity: 0.3; }
+
+.canvas-loading {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  padding: var(--space-xl) var(--space-lg);
+  background: var(--surface-container);
+}
+
+.shimmer-bar {
+  height: 12px;
+  background: linear-gradient(90deg, var(--surface-container) 25%, var(--surface-container-high) 50%, var(--surface-container) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: var(--radius);
+}
+.shimmer-bar.short { width: 60%; }
+@keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+/* Track Stack */
+.track-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+}
+
+/* Ruler Track */
+.ruler-track {
+  background: var(--surface-container);
+  height: 32px;
+  position: relative;
+  user-select: none;
+  padding: 4px 16px;
+}
+
+.ruler-chrom-label {
+  position: absolute;
+  top: 4px;
+  left: 8px;
+  color: var(--secondary);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+}
+
+.ruler-baseline {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--outline-variant);
+}
+
+.ruler-tick-group { position: absolute; bottom: 0; }
+.ruler-tick { width: 1px; background: rgba(255, 255, 255, 0.15); }
+.ruler-tick.major { height: 12px; }
+.ruler-tick.minor { height: 6px; }
+.ruler-tick-label {
+  position: absolute;
+  bottom: 14px;
+  left: 4px;
+  color: var(--on-surface-variant);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  white-space: nowrap;
+}
+
+/* Variant Track */
+.variant-track {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  background: var(--surface-container);
+  padding: 8px;
+}
+
+.track-label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  opacity: 0.7;
+  transition: opacity 0.15s ease;
+}
+.variant-track:hover .track-label { opacity: 1; }
+
+.track-label span:first-child {
+  background: rgba(18, 20, 20, 0.8);
+  padding: 4px 8px;
+  border-radius: var(--radius);
+  color: var(--on-surface);
+  font-size: 12px;
+  letter-spacing: 0.05em;
+  font-weight: 500;
+}
+
+.track-body {
+  position: relative;
+  height: 64px;
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.track-zero-line {
+  position: absolute;
+  bottom: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+/* Variant Needles */
+.variant-needle {
+  position: absolute;
+  bottom: 0;
+  width: 3px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  cursor: pointer;
+  transform: translateX(-1px);
+  transition: opacity 0.15s ease;
+}
+
+.variant-needle:hover { z-index: 10; }
+.variant-needle:hover .needle-line { width: 3px; box-shadow: 0 0 8px currentColor; }
+
+.needle-line {
+  width: 1.5px;
+  height: 60%;
+  border-radius: 1px;
+  transition: all 0.15s ease;
+}
+
+.needle-head {
+  width: 6px;
+  height: 6px;
+  border-radius: var(--radius-full);
+  margin-bottom: 2px;
+  transition: all 0.15s ease;
+}
+
+.needle-head.snp { border-radius: var(--radius-full); }
+.needle-head.insertion { border-radius: 0; transform: rotate(45deg); width: 5px; height: 5px; }
+.needle-head.deletion { border-radius: 1px; width: 8px; height: 3px; }
+
+.variant-needle.selected .needle-line { width: 3px; box-shadow: 0 0 12px currentColor; }
+.variant-needle.selected .needle-head { transform: scale(1.5); box-shadow: 0 0 8px currentColor; }
+
+.selection-beam {
+  position: absolute;
+  top: -200px;
+  bottom: -200px;
+  left: 0;
+  width: 1px;
+  border-left: 1px dashed;
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+/* ===== Variant Detail Panel ===== */
+.variant-detail-panel {
+  position: absolute;
+  top: 80px;
+  right: var(--space-lg);
+  width: 380px;
+  max-height: 500px;
+  overflow-y: auto;
+  background: rgba(26, 28, 28, 0.9);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--outline-variant);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  animation: slideUpFadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 20;
+}
+
+@keyframes slideUpFadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.detail-panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: var(--space-md);
+  border-bottom: 1px solid var(--outline-variant);
+}
+
+.detail-panel-body {
+  padding: var(--space-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.detail-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.detail-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+/* Allele Display */
+.allele-display { display: flex; align-items: center; gap: 4px; }
+.allele-ref { color: var(--on-surface); background: var(--surface-container-high); padding: 2px 8px; border-radius: var(--radius); font-family: 'JetBrains Mono', monospace; font-size: 14px; }
+.allele-arrow { color: var(--outline); font-size: 12px; }
+.allele-alt { color: var(--error); background: rgba(255, 180, 171, 0.1); padding: 2px 8px; border-radius: var(--radius); font-family: 'JetBrains Mono', monospace; font-size: 14px; }
+
+/* Chips */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: var(--radius);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.chip-snp { background: rgba(97, 219, 180, 0.12); color: var(--secondary); }
+.chip-insertion { background: rgba(127, 248, 207, 0.12); color: var(--secondary-fixed); }
+.chip-deletion { background: rgba(255, 180, 171, 0.12); color: var(--error); }
+.chip-complex { background: rgba(142, 145, 146, 0.12); color: var(--outline); }
+.chip-pass { background: rgba(97, 219, 180, 0.12); color: var(--secondary); }
+.chip-fail { background: rgba(255, 180, 171, 0.12); color: var(--error); }
+
+/* Grids */
+.genotype-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; }
+.genotype-cell { display: flex; flex-direction: column; gap: 2px; padding: 4px; background: var(--surface-container); border-radius: var(--radius); }
+.info-grid { display: flex; flex-direction: column; gap: 4px; }
+.info-row { display: flex; justify-content: space-between; align-items: center; padding: 4px; background: var(--surface-container); border-radius: var(--radius); }
+
+/* ===== Modal ===== */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.15s ease;
+}
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+.modal-content {
+  background: var(--surface-container-low);
+  border: 1px solid var(--outline-variant);
+  border-radius: var(--radius-xl);
+  width: 440px;
+  max-width: 90vw;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5);
+  animation: slideUpFadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-lg) var(--space-lg) var(--space-md);
+}
+
+.modal-header h3 {
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--on-surface);
+}
+
+.modal-body {
+  padding: 0 var(--space-lg);
+}
+
+.modal-footer {
+  padding: var(--space-md) var(--space-lg) var(--space-lg);
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-sm);
+}
+
+.file-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  margin-top: var(--space-md);
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.input-group label {
+  color: var(--outline);
+}
+
+.input-group input[type="file"] {
+  font-size: 12px;
+  color: var(--on-surface);
+  padding: var(--space-sm) var(--space-md);
+  background: var(--surface-container);
+  border: 1px solid var(--outline-variant);
+  border-radius: var(--radius);
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 1024px) {
+  .navbar-nav { display: none; }
+  .omnibar-wrapper { width: 280px; }
+}
+
+@media (max-width: 768px) {
+  .omnibar-wrapper { display: none; }
+  .copilot-sidebar {
+    position: fixed;
+    right: 0;
+    top: 64px;
+    bottom: 0;
+    z-index: 45;
+    box-shadow: -8px 0 24px rgba(0, 0, 0, 0.5);
+  }
+  .context-header { flex-direction: column; gap: var(--space-sm); align-items: flex-start; }
+  .context-title { font-size: 24px; line-height: 32px; }
+  .variant-detail-panel { width: calc(100% - var(--space-lg) * 2); }
+}
+
+/* ===== Variant Tooltip ===== */
+.variant-tooltip {
+  display: none;
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-bottom: 8px;
+  width: 192px;
+  background-color: var(--surface-container-high);
+  color: var(--on-surface);
+  padding: 8px;
+  border-radius: 4px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  border: 1px solid var(--outline-variant);
+  z-index: 30;
+}
+
+.group\/variant:hover .variant-tooltip {
+  display: block;
+}
+
+.text-11 {
+  font-size: 11px;
+}
+
+.text-10 {
+  font-size: 10px;
+}
+
+
+/* ==========================================================================
+   MOLSTAR UI OVERRIDES — Dark Theme Integration
+   
+   All values taken from live DOM inspection. Molstar's default dark theme
+   uses blue-tinted colors (#111318, #1f222b, #ccd4e0) that clash with our
+   neutral-gray dark theme. These overrides remap every visible element to
+   match our --color-* design tokens.
+   
+   Variable reference (from index.css @theme):
+     --color-surface:                  #121414
+     --color-surface-container:        #1e2020
+     --color-surface-container-low:    #1a1c1c
+     --color-surface-container-high:   #282a2b
+     --color-surface-container-lowest: #0c0f0f
+     --color-surface-container-highest:#333535
+     --color-on-surface:               #e2e2e2
+     --color-on-surface-variant:       #c4c7c7
+     --color-outline:                  #8e9192
+     --color-outline-variant:          #444748
+     --color-secondary:                #61dbb4
+     --color-on-secondary:             #00382a
+   ========================================================================== */
+
+/* ---------- 1. Global Font & Root ---------- */
+.msp-plugin {
+  font-family: 'Inter', sans-serif !important;
+  color: #e2e2e2 !important;
+}
+
+/* ---------- 2. Layout & Backgrounds ---------- */
+/* Plugin root — was #111318 (blue-tinted), now neutral */
+.msp-plugin,
+.msp-plugin .msp-layout-static {
+  background-color: #121414 !important;
+}
+
+/* Main viewport — was #111318 */
+.msp-plugin .msp-viewport {
+  background-color: #121414 !important;
+  color: #e2e2e2 !important;
+}
+
+/* Layout regions — structural containers */
+.msp-plugin .msp-layout-region,
+.msp-plugin .msp-layout-main {
+  color: #e2e2e2 !important;
+}
+
+/* Viewport controls panel — was #1f222b, now surface-container */
+.msp-plugin .msp-viewport-controls-panel {
+  background-color: #1e2020 !important;
+  color: #e2e2e2 !important;
+}
+
+/* Semi-transparent overlays & hover box — was #111318 */
+.msp-plugin .msp-semi-transparent-background {
+  background-color: #121414 !important;
+  color: #e2e2e2 !important;
+}
+
+.msp-plugin .msp-hover-box-body {
+  background-color: #121414 !important;
+  color: #e2e2e2 !important;
+}
+
+/* Drag-drop overlay */
+.msp-plugin .msp-drag-drop-overlay {
+  background-color: rgba(12, 15, 15, 0.36) !important;
+  color: #e2e2e2 !important;
+  border-color: #444748 !important;
+}
+
+/* ---------- 3. Control Groups ---------- */
+/* Group header — was #111318 */
+.msp-plugin .msp-control-group-header {
+  background-color: #121414 !important;
+  color: #c4c7c7 !important;
+  border-bottom: 1px solid #444748 !important;
+  font-weight: 600 !important;
+  padding: 8px !important;
+}
+
+/* Group expander icon button */
+.msp-plugin .msp-control-group-expander {
+  color: #c4c7c7 !important;
+}
+.msp-plugin .msp-control-group-expander:hover {
+  color: #61dbb4 !important;
+}
+
+/* ---------- 4. Control Rows ---------- */
+.msp-plugin .msp-control-row {
+  background: transparent !important;
+}
+
+/* Control row ctrl area — was #0c0d11, now surface-container-lowest */
+.msp-plugin .msp-control-row-ctrl {
+  background-color: #0c0f0f !important;
+  color: #e2e2e2 !important;
+}
+
+/* Control row labels — was #9cacc3 (blue-tinted), now neutral */
+.msp-plugin .msp-control-row-label {
+  color: #c4c7c7 !important;
+}
+
+/* Control offset / mapped parameter groups */
+.msp-plugin .msp-control-offset,
+.msp-plugin .msp-mapped-parameter-group {
+  color: #e2e2e2 !important;
+}
+
+/* ---------- 5. Buttons ---------- */
+/* Standard buttons */
+.msp-plugin .msp-btn,
+.msp-plugin .msp-btn-block,
+.msp-plugin .msp-btn-childless,
+.msp-plugin .msp-select-toggle,
+.msp-plugin .msp-combined-color-button {
+  background-color: #1a1c1c !important;
+  color: #e2e2e2 !important;
+  border: 1px solid #444748 !important;
+  border-radius: 6px !important;
+  font-family: 'Inter', sans-serif !important;
+  transition: all 0.15s ease !important;
+}
+
+.msp-plugin .msp-btn:hover,
+.msp-plugin .msp-btn-block:hover,
+.msp-plugin .msp-btn-childless:hover,
+.msp-plugin .msp-select-toggle:hover,
+.msp-plugin .msp-combined-color-button:hover {
+  background-color: #282a2b !important;
+  border-color: #61dbb4 !important;
+}
+
+/* Icon buttons — transparent bg */
+.msp-plugin .msp-btn-icon {
+  background-color: transparent !important;
+  border: none !important;
+  color: #c4c7c7 !important;
+}
+.msp-plugin .msp-btn-icon:hover {
+  background-color: #333535 !important;
+  color: #61dbb4 !important;
+}
+
+/* Link buttons */
+.msp-plugin .msp-btn-link,
+.msp-plugin .msp-btn-link-toggle-off {
+  color: #c4c7c7 !important;
+  background-color: transparent !important;
+  border: none !important;
+}
+.msp-plugin .msp-btn-link:hover,
+.msp-plugin .msp-btn-link-toggle-off:hover {
+  color: #61dbb4 !important;
+}
+
+/* Toggle-on — use #61dbb4 (secondary) for less glare than #7ff8cf */
+.msp-plugin .msp-btn-link-toggle-on {
+  background-color: #61dbb4 !important;
+  color: #00382a !important;
+  border: none !important;
+}
+.msp-plugin .msp-btn-link-toggle-on:hover {
+  filter: brightness(1.1) !important;
+}
+
+/* Help buttons */
+.msp-plugin .msp-help {
+  color: #c4c7c7 !important;
+}
+.msp-plugin .msp-help:hover {
+  color: #61dbb4 !important;
+}
+
+/* ---------- 6. Forms & Inputs ---------- */
+.msp-plugin .msp-form-control,
+.msp-plugin select,
+.msp-plugin input[type="text"],
+.msp-plugin input[type="number"] {
+  background-color: #282a2b !important;
+  color: #e2e2e2 !important;
+  border: 1px solid #444748 !important;
+  border-radius: 6px !important;
+  padding: 4px 8px !important;
+  font-family: 'Inter', sans-serif !important;
+  transition: all 0.2s ease !important;
+}
+
+.msp-plugin .msp-form-control:focus,
+.msp-plugin select:focus,
+.msp-plugin input:focus {
+  outline: none !important;
+  border-color: #61dbb4 !important;
+  box-shadow: 0 0 0 1px #61dbb4 !important;
+}
+
+/* ---------- 7. Sliders ---------- */
+/* Slider container — was #2b2f2f, now surface-container-high */
+.msp-plugin .msp-slider {
+  background-color: #282a2b !important;
+}
+
+/* Slider rail — was #1f222b, now surface-container */
+.msp-plugin .msp-slider-base-rail {
+  background-color: #1e2020 !important;
+}
+
+/* Slider handles — were #ccd4e0 (bright white), now secondary accent */
+.msp-plugin .msp-slider-base-handle,
+.msp-plugin .msp-slider-base-handle-2,
+.msp-plugin .msp-slider-base-handle-upper {
+  background-color: #61dbb4 !important;
+  border: 2px solid #1e2020 !important;
+}
+
+/* ---------- 8. Icons & Text ---------- */
+.msp-plugin .msp-icon,
+.msp-plugin .msp-material-icon {
+  color: #e2e2e2 !important;
+}
+
+/* ---------- 9. Context Menus & Popovers ---------- */
+.msp-plugin .msp-context-menu {
+  background-color: #282a2b !important;
+  border: 1px solid #444748 !important;
+  border-radius: 6px !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4) !important;
+  padding: 4px !important;
+}
+
+.msp-plugin .msp-context-menu .msp-context-menu-item {
+  color: #e2e2e2 !important;
+  padding: 6px 12px !important;
+  border-radius: 4px !important;
+  transition: background 0.1s ease !important;
+}
+
+.msp-plugin .msp-context-menu .msp-context-menu-item:hover {
+  background-color: #333535 !important;
+  color: #61dbb4 !important;
+}
+
+/* ---------- 10. Tooltips ---------- */
+.msp-plugin .msp-tooltip {
+  background-color: #333535 !important;
+  color: #e2e2e2 !important;
+  border: 1px solid #444748 !important;
+  border-radius: 6px !important;
+  padding: 4px 8px !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+  font-size: 12px !important;
+  font-family: 'Inter', sans-serif !important;
+}
+
+/* ---------- 11. Dropdowns / Options ---------- */
+.msp-plugin .msp-options {
+  background-color: #282a2b !important;
+  border: 1px solid #444748 !important;
+  border-radius: 6px !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* ---------- 12. Scrollbars ---------- */
+.msp-plugin ::-webkit-scrollbar {
+  width: 6px !important;
+  height: 6px !important;
+}
+.msp-plugin ::-webkit-scrollbar-track {
+  background: #1a1c1c !important;
+}
+.msp-plugin ::-webkit-scrollbar-thumb {
+  background: #444748 !important;
+  border-radius: 4px !important;
+}
+.msp-plugin ::-webkit-scrollbar-thumb:hover {
+  background: #8e9192 !important;
+}
+
+/* ---------- 13. Highlight & Background Tasks ---------- */
+.msp-plugin .msp-highlight-toast-wrapper {
+  color: #e2e2e2 !important;
+}
+
+.msp-plugin .msp-background-tasks {
+  color: #e2e2e2 !important;
+}
