@@ -24,6 +24,7 @@ const removeGzEncodingPlugin = () => {
 
 // https://vite.dev/config/
 export default defineConfig({
+  base: '/omnistrand/',
   plugins: [
     react(),
     tailwindcss(),
