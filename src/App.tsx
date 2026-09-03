@@ -579,6 +579,10 @@ function App() {
       />
       {/* TopNavBar */}
       <header className={`bg-background/70 backdrop-blur-md fixed top-0 w-full z-50 border-b border-outline-variant flat no shadows ${showreelClass}`} style={getShowreelStyle(0, 100)}>
+        <div className="bg-teal-500 text-gray-900 text-center py-0.5 text-[11px] font-bold uppercase tracking-wider flex items-center justify-center gap-1.5">
+          <span className="material-symbols-outlined text-[13px]">warning</span>
+          ALERT: Vibecoded, project is entirely vibecoded with little to no steering.
+        </div>
         <div className="flex justify-between items-center px-lg h-16 max-w-container-max mx-auto">
           <div className="flex items-center gap-6">
             <div className="flex items-center gap-2">
@@ -647,7 +651,7 @@ function App() {
         </div>
       </header>
 
-      <div className="flex flex-1 pt-16 w-full overflow-hidden">
+      <div className="flex flex-1 pt-[84px] w-full overflow-hidden">
         {/* Central Workspace */}
         <main className={`flex-1 bg-tertiary-container overflow-y-auto relative flex flex-col p-md gap-3 ${showreelClass}`} style={{ backgroundColor: '#0d0d0d', ...getShowreelStyle(150, 400) }}>
           {activeTab === 'browser' ? (
