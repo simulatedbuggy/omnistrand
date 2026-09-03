@@ -122,3 +122,9 @@ body {
 }
 
 
+
+.animate-slide-pop-slow {
+  opacity: 0;
+  animation: slidePop 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
