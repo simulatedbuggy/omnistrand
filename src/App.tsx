@@ -475,32 +475,59 @@ function App() {
         setIsLoading(true);
         setSearchMessage(null);
         try {
-          const res = await resolveGeneOrLocusAsync(locusInput, 5000);
-          if (res.found && res.locus) {
-            const { chrom, start, end } = res.locus;
-            const formatted = `${chrom}:${start.toLocaleString()}-${end.toLocaleString()}`;
-            setLocusInput(formatted);
-            setSearchMessage({ text: res.message, type: 'success' });
-            if (engineRef.current) {
-              await queryLocus(engineRef.current, `${chrom}:${start}-${end}`);
+          const query = locusInput.trim();
+          if (!query) return;
+
+          if (activeTab === 'discovery') {
+            // Discovery Tab Context: Resolve to UniProt ID
+            const isUniprot = /^[OPQ][0-9][A-Z0-9]{3}[0-9]|[A-NR-Z][0-9]([A-Z][A-Z0-9]{2}[0-9]){1,2}$/i.test(query);
+            if (isUniprot) {
+              setActiveUniprotId(query.toUpperCase());
+              setSearchMessage({ text: `Loaded structure ${query.toUpperCase()}`, type: 'success' });
             } else {
-              setCurrentLocus(res.locus);
+              const fetchRes = await fetch(`https://rest.uniprot.org/uniprotkb/search?query=(gene_exact:${query.toUpperCase()})%20AND%20(organism_id:9606)%20AND%20(reviewed:true)&fields=accession&size=1`);
+              const data = await fetchRes.json();
+              if (data.results && data.results.length > 0) {
+                const resolvedId = data.results[0].primaryAccession;
+                setActiveUniprotId(resolvedId);
+                setLocusInput(resolvedId);
+                setSearchMessage({ text: `Resolved ${query.toUpperCase()} to ${resolvedId}`, type: 'success' });
+              } else {
+                setSearchMessage({ text: `No protein structure found for gene: ${query}`, type: 'error' });
+              }
             }
           } else {
-            // Not found by resolver, try direct locus query as fallback
-            if (engineRef.current) {
-              await queryLocus(engineRef.current, locusInput);
-            }
-            if (!parseLocus(locusInput)) {
-               setSearchMessage({ text: res.message || 'Gene not found and invalid locus.', type: 'error' });
+            // Browser Tab Context: Resolve to Genomic Locus
+            const res = await resolveGeneOrLocusAsync(query, 5000);
+            if (res.found && res.locus) {
+              const { chrom, start, end } = res.locus;
+              const formatted = `${chrom}:${start.toLocaleString()}-${end.toLocaleString()}`;
+              setLocusInput(formatted);
+              setSearchMessage({ text: res.message, type: 'success' });
+              if (engineRef.current) {
+                await queryLocus(engineRef.current, `${chrom}:${start}-${end}`);
+              } else {
+                setCurrentLocus(res.locus);
+              }
+            } else {
+              // Not found by resolver, try direct locus query as fallback
+              if (engineRef.current) {
+                await queryLocus(engineRef.current, query);
+              }
+              if (!parseLocus(query)) {
+                 setSearchMessage({ text: res.message || 'Gene not found and invalid locus.', type: 'error' });
+              }
             }
           }
+        } catch (err) {
+          console.error(err);
+          setSearchMessage({ text: 'Search request failed.', type: 'error' });
         } finally {
           setIsLoading(false);
         }
       }
     },
-    [locusInput, queryLocus]
+    [locusInput, queryLocus, activeTab]
   );
 
   const handlePan = useCallback(
@@ -561,7 +588,7 @@ function App() {
               </span>
               <input
                 className="w-full bg-surface-container-high border border-outline-variant rounded-full py-2 pl-10 pr-10 text-on-surface focus:outline-none focus:border-secondary focus:ring-1 focus:ring-secondary transition-all font-body-sm text-body-sm placeholder:text-on-surface-variant"
-                placeholder="Search locus, gene (e.g. BUB1B, BRCA1), or position..."
+                placeholder={activeTab === 'browser' ? "Search locus, gene (e.g. BUB1B, BRCA1), or position..." : "Search structure by Gene (e.g. BRCA1) or UniProt ID..."}
                 type="text"
                 value={locusInput}
                 onChange={(e) => setLocusInput(e.target.value)}
@@ -718,6 +745,7 @@ function App() {
               focusResidues={focusResidues}
               viewerRepresentation={viewerRepresentation}
               aiCommentary={aiCommentary}
+              onLoadStructure={setActiveUniprotId}
             />
           )}
         </main>
