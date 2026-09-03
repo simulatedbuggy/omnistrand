@@ -566,8 +566,8 @@ function App() {
   }, [searchMessage]);
 
   const isShowreel = new URLSearchParams(window.location.search).get('showreel') === 'true';
-  const showreelClass = isShowreel ? 'showreel-animate' : '';
-  const getShowreelStyle = (delayMs: number) => isShowreel ? { animationDelay: `${delayMs}ms` } : {};
+  const showreelClass = isShowreel ? 'animate-slide-pop-slow' : 'animate-slide-pop';
+  const getShowreelStyle = (fastMs: number, slowMs: number) => ({ animationDelay: `${isShowreel ? slowMs : fastMs}ms` });
 
   return (
     <div className="bg-background text-on-surface antialiased h-screen w-full flex flex-col overflow-hidden dark relative">
@@ -578,7 +578,7 @@ function App() {
         }`}
       />
       {/* TopNavBar */}
-      <header className={`bg-background/70 backdrop-blur-md fixed top-0 w-full z-50 border-b border-outline-variant flat no shadows ${showreelClass}`} style={getShowreelStyle(100)}>
+      <header className={`bg-background/70 backdrop-blur-md fixed top-0 w-full z-50 border-b border-outline-variant flat no shadows ${showreelClass}`} style={getShowreelStyle(0, 100)}>
         <div className="flex justify-between items-center px-lg h-16 max-w-container-max mx-auto">
           <div className="flex items-center gap-6">
             <div className="flex items-center gap-2">
@@ -649,7 +649,7 @@ function App() {
 
       <div className="flex flex-1 pt-16 w-full overflow-hidden">
         {/* Central Workspace */}
-        <main className={`flex-1 bg-tertiary-container overflow-y-auto relative flex flex-col p-md gap-3 ${showreelClass}`} style={{ backgroundColor: '#0d0d0d', ...getShowreelStyle(400) }}>
+        <main className={`flex-1 bg-tertiary-container overflow-y-auto relative flex flex-col p-md gap-3 ${showreelClass}`} style={{ backgroundColor: '#0d0d0d', ...getShowreelStyle(150, 400) }}>
           {activeTab === 'browser' ? (
             <>
               {/* Context Header */}
@@ -812,4 +812,5 @@ function App() {
 }
 
 export default App;
+
 

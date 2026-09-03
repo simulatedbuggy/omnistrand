@@ -128,9 +128,9 @@ const DiscoveryPanel: React.FC<DiscoveryPanelProps> = ({
   }, [viewerRepresentation]);
 
   const isShowreel = new URLSearchParams(window.location.search).get('showreel') === 'true';
-  const showreelClass = isShowreel ? 'showreel-animate' : '';
-  const getShowreelStyle = (delayMs: number) => isShowreel ? { animationDelay: `${delayMs}ms` } : {};
-
+  const showreelClass = isShowreel ? 'animate-slide-pop-slow' : 'animate-slide-pop';
+  const getShowreelStyle = (fastMs: number, slowMs: number) => ({ animationDelay: `${isShowreel ? slowMs : fastMs}ms` });
+  
   return (
     <div className="flex flex-col md:flex-row h-full gap-4 w-full">
       {/* Left Column: 3D Structure Viewer (Takes 2/3 of width) */}
@@ -147,7 +147,7 @@ const DiscoveryPanel: React.FC<DiscoveryPanelProps> = ({
               </div>
             )}
           </div>
-          <div className={`flex-1 relative bg-background/50 flex flex-col items-center justify-center ${showreelClass}`} style={getShowreelStyle(600)}>
+          <div className={`flex-1 relative bg-background/50 flex flex-col items-center justify-center ${showreelClass}`} style={getShowreelStyle(150, 600)}>
             {uniprotId ? (
               <div ref={viewerRef} className="absolute inset-0" />
               ) : (
@@ -246,4 +246,5 @@ const DiscoveryPanel: React.FC<DiscoveryPanelProps> = ({
 };
 
 export default DiscoveryPanel;
+
 
