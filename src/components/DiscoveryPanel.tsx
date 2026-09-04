@@ -6,6 +6,7 @@ interface DiscoveryPanelProps {
   focusResidues?: { start: number; end?: number } | null;
   viewerRepresentation?: 'cartoon' | 'surface' | 'ball-and-stick';
   aiCommentary?: string | null;
+  isAiConnected?: boolean;
   onLoadStructure?: (id: string) => void;
 }
 
@@ -15,6 +16,7 @@ const DiscoveryPanel: React.FC<DiscoveryPanelProps> = ({
   focusResidues = null,
   viewerRepresentation = 'cartoon',
   aiCommentary = null,
+  isAiConnected = false,
   onLoadStructure
 }) => {
   const viewerRef = useRef<HTMLDivElement>(null);
@@ -26,19 +28,8 @@ const DiscoveryPanel: React.FC<DiscoveryPanelProps> = ({
       setProteinData(null);
       return;
     }
-    
-    // Hardcoded fallback for the demo MVA case to guarantee it works perfectly during presentation
-    if (uniprotId === 'O60566') {
-      setProteinData({
-        gene: 'BUB1B',
-        name: 'Spindle Assembly Checkpoint Kinase',
-        function: 'Essential component of the mitotic checkpoint. Required for normal mitosis progression.',
-        rationale: "Diagnostic analysis identified compound heterozygous mutations in BUB1B as the causal factor for the proband's Mosaic Variegated Aneuploidy (MVA). The target objective is to analyze the 3D kinase domain for potential allosteric binding pockets or compensatory drug repurposing candidates to restore spindle checkpoint functionality."
-      });
-      return;
-    }
 
-    // Dynamic fetch for all other proteins
+    // Dynamic fetch for all proteins
     async function fetchUniprot() {
       try {
         const res = await fetch(`https://rest.uniprot.org/uniprotkb/${uniprotId}`);
@@ -199,15 +190,27 @@ const DiscoveryPanel: React.FC<DiscoveryPanelProps> = ({
                 </div>
       
                 {/* Discovery Rationale Card */}
-                <div className="bg-surface-container-high rounded-lg p-4 border border-outline-variant/50">
-                  <div className="flex items-center gap-2 mb-3 text-error">
-                    <span className="material-symbols-outlined text-[20px]">troubleshoot</span>
-                    <h3 className="font-label-lg font-bold text-on-surface">Discovery Rationale</h3>
+                {isAiConnected ? (
+                  <div className="bg-surface-container-high rounded-lg p-4 border border-outline-variant/50">
+                    <div className="flex items-center gap-2 mb-3 text-error">
+                      <span className="material-symbols-outlined text-[20px]">troubleshoot</span>
+                      <h3 className="font-label-lg font-bold text-on-surface">Discovery Rationale</h3>
+                    </div>
+                    <p className="text-body-sm text-on-surface-variant leading-relaxed">
+                      {proteinData ? proteinData.rationale : 'Loading diagnostic rationale...'}
+                    </p>
                   </div>
-                  <p className="text-body-sm text-on-surface-variant leading-relaxed">
-                    {proteinData ? proteinData.rationale : 'Loading diagnostic rationale...'}
-                  </p>
-                </div>
+                ) : (
+                  <div className="bg-surface-container-high rounded-lg p-4 border border-outline-variant/50 border-dashed opacity-70">
+                    <div className="flex items-center gap-2 mb-3 text-on-surface-variant">
+                      <span className="material-symbols-outlined text-[20px]">troubleshoot</span>
+                      <h3 className="font-label-lg font-bold text-on-surface">Discovery Rationale</h3>
+                    </div>
+                    <p className="text-body-sm text-on-surface-variant leading-relaxed italic">
+                      AI Agent disabled. Connect your AI agent to generate dynamic discovery rationale.
+                    </p>
+                  </div>
+                )}
               </>
             ) : (
               <div className="flex-1 flex flex-col items-center justify-center text-center p-6 opacity-50">
@@ -227,7 +230,7 @@ const DiscoveryPanel: React.FC<DiscoveryPanelProps> = ({
                 {aiCommentary}
               </p>
             </div>
-          ) : (
+          ) : isAiConnected ? (
             <div className="bg-surface-container-high rounded-lg p-4 border border-outline-variant mt-auto border-dashed opacity-70">
               <div className="flex items-center gap-2 mb-2 text-on-surface-variant">
                 <span className="material-symbols-outlined text-[20px]">psychology</span>
@@ -235,6 +238,16 @@ const DiscoveryPanel: React.FC<DiscoveryPanelProps> = ({
               </div>
               <p className="text-body-sm text-on-surface-variant leading-relaxed italic">
                 Ask the OmniStrand agent to analyze the pharmacological potential of this structure.
+              </p>
+            </div>
+          ) : (
+            <div className="bg-surface-container-high rounded-lg p-4 border border-outline-variant mt-auto border-dashed opacity-70">
+              <div className="flex items-center gap-2 mb-2 text-on-surface-variant">
+                <span className="material-symbols-outlined text-[20px]">psychology_alt</span>
+                <h3 className="font-label-md font-bold">AI Agent Disabled</h3>
+              </div>
+              <p className="text-body-sm text-on-surface-variant leading-relaxed italic">
+                Connect your AI agent via WebMCP to unlock deep structural and pharmacological insights.
               </p>
             </div>
           )}

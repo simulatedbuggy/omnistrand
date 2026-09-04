@@ -20,6 +20,7 @@ interface VariantFilterToolbarProps {
   onChange: (filters: VariantFilters) => void;
   totalCount: number;
   filteredCount: number;
+  disabled?: boolean;
 }
 
 const VARIANT_TYPES: Array<{ id: 'SNP' | 'INDEL' | 'MNP' | 'OTHER'; label: string; color: string }> = [
@@ -34,6 +35,7 @@ export const VariantFilterToolbar: React.FC<VariantFilterToolbarProps> = ({
   onChange,
   totalCount,
   filteredCount,
+  disabled = false,
 }) => {
   const [showAdvanced, setShowAdvanced] = useState(false);
 
@@ -58,7 +60,7 @@ export const VariantFilterToolbar: React.FC<VariantFilterToolbarProps> = ({
   };
 
   return (
-    <div className="bg-surface-container border border-outline-variant rounded-lg p-2.5 flex flex-col gap-2 shadow-sm text-on-surface">
+    <div className={`bg-surface-container border border-outline-variant rounded-lg p-2.5 flex flex-col gap-2 shadow-sm text-on-surface transition-opacity duration-300 ${disabled ? 'opacity-50 pointer-events-none' : ''}`}>
       {/* Top Primary Bar */}
       <div className="flex flex-wrap items-center justify-between gap-2.5">
         {/* Left: Search Box */}

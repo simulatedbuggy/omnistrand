@@ -42,7 +42,7 @@ export interface WebMCPCallbacks {
   onFilterVariants: (filters: Partial<VariantFilters>) => { success: boolean; activeFilters: VariantFilters; matchingCount: number; message?: string };
   prepareTrack1Export: () => Promise<{ success: boolean; message: string; data?: any }>;
   validateTrack1Submission: () => Promise<{ success: boolean; message: string; isValid?: boolean }>;
-  generateTrack1Csv: (args: { primaryVariantId: string; secondaryVariantId?: string; epcr: number; findingType: string; notes?: string }) => { success: boolean; message: string; csv?: string };
+  exportClinicalFindingsCsv: (args: { primaryVariantId: string; secondaryVariantId?: string; epcr: number; findingType: string; notes?: string }) => { success: boolean; message: string; csv?: string };
 
   // Gene & Variant Inspection
   onSearchGene: (geneSymbol: string, navigate?: boolean) => Promise<GeneLookupResult> | GeneLookupResult;
@@ -88,7 +88,7 @@ const TOOL_ALIASES: Record<string, string> = {
   filterVariants: 'filter_variants',
   prepareTrack1Export: 'prepare_track1_export',
   validateTrack1Submission: 'validate_track1_submission',
-  generateTrack1Csv: 'generate_track1_csv',
+  exportClinicalFindingsCsv: 'export_clinical_findings_csv',
   searchGene: 'search_gene_locus',
   searchGeneLocus: 'search_gene_locus',
   getCandidateSummary: 'get_candidate_summary',
@@ -347,10 +347,10 @@ export function registerWebMCPTools(callbacks: WebMCPCallbacks): WebMCPToolDef[]
       },
     },
 
-    // 8b. generate_track1_csv
+    // 8b. export_clinical_findings_csv
     {
-      name: 'generate_track1_csv',
-      description: 'Generates the final Track 1 Submission CSV string for the hackathon by pulling variant coordinates directly from the UI state and pairing them with AI-provided clinical metadata.',
+      name: 'export_clinical_findings_csv',
+      description: 'Generates a standardized clinical findings CSV report by pulling variant coordinates directly from the UI state and pairing them with AI-provided clinical metadata.',
       inputSchema: {
         type: 'object',
         properties: {
@@ -364,9 +364,9 @@ export function registerWebMCPTools(callbacks: WebMCPCallbacks): WebMCPToolDef[]
       },
       execute: async (args: any) => {
         try {
-          return callbacks.generateTrack1Csv(args);
+          return callbacks.exportClinicalFindingsCsv(args);
         } catch (e: any) {
-          return { success: false, message: `Failed to generate Track 1 CSV: ${e.message}` };
+          return { success: false, message: `Failed to export CSV: ${e.message}` };
         }
       },
     },

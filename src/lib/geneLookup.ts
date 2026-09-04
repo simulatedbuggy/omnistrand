@@ -1,4 +1,3 @@
-/// <reference types="node" />
 /**
  * src/lib/geneLookup.ts
  * 
@@ -354,9 +353,7 @@ export async function resolveGeneOrLocusAsync(query: string, paddingBp: number =
       try {
         const controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
         const timeoutId = controller ? setTimeout(() => controller.abort(), 15000) : null;
-        const isNode = typeof process !== 'undefined' && process.versions != null && process.versions.node != null;
-        const baseUrl = isNode || (typeof window !== 'undefined' && window.location.origin === 'null') ? 'https://rest.ensembl.org' : '/ensembl';
-        const url = `${baseUrl}/lookup/symbol/homo_sapiens/${encodeURIComponent(upperSymbol)}?expand=0`;
+        const url = `https://rest.ensembl.org/lookup/symbol/homo_sapiens/${encodeURIComponent(upperSymbol)}?expand=0`;
 
         const response = await fetch(url, { 
           headers: { 'Accept': 'application/json' },

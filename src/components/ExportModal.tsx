@@ -122,16 +122,21 @@ export const ExportModal: React.FC<ExportModalProps> = ({
             <div className="grid grid-cols-2 gap-2">
               <button
                 type="button"
+                disabled={filteredVariants.length === 0}
                 onClick={() => setScope('filtered')}
-                className={`p-3 rounded-lg border text-left flex flex-col gap-1 transition-all cursor-pointer ${
-                  scope === 'filtered'
-                    ? 'bg-secondary/10 border-secondary text-on-surface shadow-[0_0_8px_rgba(97,219,180,0.2)]'
-                    : 'bg-surface-container border-outline-variant/60 text-on-surface-variant hover:text-on-surface'
+                className={`p-3 rounded-lg border text-left flex flex-col gap-1 transition-all ${
+                  filteredVariants.length === 0
+                    ? 'opacity-50 cursor-not-allowed bg-surface-container border-outline-variant/30 text-on-surface-variant/50'
+                    : scope === 'filtered'
+                    ? 'cursor-pointer bg-secondary/10 border-secondary text-on-surface shadow-[0_0_8px_rgba(97,219,180,0.2)]'
+                    : 'cursor-pointer bg-surface-container border-outline-variant/60 text-on-surface-variant hover:text-on-surface'
                 }`}
               >
                 <div className="flex justify-between items-center">
                   <span className="font-semibold text-xs text-on-surface">Filtered Variants</span>
-                  <span className="px-2 py-0.5 rounded-full bg-secondary/20 text-secondary text-[11px] font-bold font-code-sm">
+                  <span className={`px-2 py-0.5 rounded-full text-[11px] font-bold font-code-sm ${
+                    filteredVariants.length === 0 ? 'bg-surface-container-high text-on-surface-variant' : 'bg-secondary/20 text-secondary'
+                  }`}>
                     {filteredVariants.length} records
                   </span>
                 </div>
@@ -142,11 +147,14 @@ export const ExportModal: React.FC<ExportModalProps> = ({
 
               <button
                 type="button"
+                disabled={allVariants.length === 0}
                 onClick={() => setScope('all')}
-                className={`p-3 rounded-lg border text-left flex flex-col gap-1 transition-all cursor-pointer ${
-                  scope === 'all'
-                    ? 'bg-secondary/10 border-secondary text-on-surface shadow-[0_0_8px_rgba(97,219,180,0.2)]'
-                    : 'bg-surface-container border-outline-variant/60 text-on-surface-variant hover:text-on-surface'
+                className={`p-3 rounded-lg border text-left flex flex-col gap-1 transition-all ${
+                  allVariants.length === 0
+                    ? 'opacity-50 cursor-not-allowed bg-surface-container border-outline-variant/30 text-on-surface-variant/50'
+                    : scope === 'all'
+                    ? 'cursor-pointer bg-secondary/10 border-secondary text-on-surface shadow-[0_0_8px_rgba(97,219,180,0.2)]'
+                    : 'cursor-pointer bg-surface-container border-outline-variant/60 text-on-surface-variant hover:text-on-surface'
                 }`}
               >
                 <div className="flex justify-between items-center">

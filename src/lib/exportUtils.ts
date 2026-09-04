@@ -228,7 +228,7 @@ export const exportVariantsToCSV = exportToCsv;
 export function exportToJson(variants: ParsedVariant[], metadata: Record<string, any> = {}): string {
   const payload = {
     metadata: {
-      generatedAt: '2026-08-31T00:00:00Z',
+      generatedAt: new Date().toISOString(),
       exporter: 'OmniStrand IGV Tools',
       totalCount: variants.length,
       ...metadata,
@@ -287,7 +287,7 @@ export function exportTrackData(
     case 'vcf':
       return {
         data: exportToVcf(variants, options.sampleNames),
-        mimeType: 'text/vcard',
+        mimeType: 'text/plain',
         extension: 'vcf',
         count: variants.length,
       };

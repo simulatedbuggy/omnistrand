@@ -344,7 +344,67 @@ export const GenomicCanvas: React.FC<GenomicCanvasProps> = ({
           {/* Data Track Labels (Iterating over TRACK_ORDER) */}
           {TRACK_ORDER.map((trackId) => {
             const track = tracksConfig[trackId];
-            if (!track || !track.visible) return null;
+            if (!track) return null;
+
+            if (!track.visible) {
+              return (
+                <div
+                  key={trackId}
+                  className="relative group/label flex items-center justify-between px-3 border-t border-outline-variant/50 shrink-0 select-none bg-surface-container opacity-60"
+                  style={{ height: '32px' }}
+                >
+                  <div className="flex flex-col justify-center overflow-hidden pr-1">
+                    <span className="font-label-md text-[11px] text-on-surface font-bold leading-tight truncate italic">
+                      {track.label} (Hidden)
+                    </span>
+                  </div>
+                  <div className="relative">
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setActiveMenuTrackId(activeMenuTrackId === trackId ? null : trackId);
+                      }}
+                      className={`p-1 rounded hover:bg-surface-container-high transition-all cursor-pointer ${
+                        activeMenuTrackId === trackId ? 'bg-surface-container-highest text-secondary' : 'text-on-surface-variant hover:text-on-surface'
+                      }`}
+                      title={`Configure ${track.label} track`}
+                    >
+                      <span className="material-symbols-outlined text-[15px]">tune</span>
+                    </button>
+
+                    {activeMenuTrackId === trackId && (
+                      <div
+                        className="absolute left-full top-0 ml-2 w-48 bg-surface-container-low border border-outline-variant rounded-lg p-3 shadow-2xl z-50 flex flex-col gap-3 font-body-sm text-xs text-on-surface animate-fadeIn"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <div className="flex justify-between items-center border-b border-outline-variant/60 pb-1.5">
+                          <strong className="font-label-md text-xs">{track.label}</strong>
+                          <button
+                            type="button"
+                            onClick={() => setActiveMenuTrackId(null)}
+                            className="text-on-surface-variant hover:text-on-surface text-xs cursor-pointer"
+                          >
+                            ✕
+                          </button>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            if (onToggleTrackVisibility) onToggleTrackVisibility(trackId, true);
+                            setActiveMenuTrackId(null);
+                          }}
+                          className="px-2 py-1 rounded bg-secondary/10 hover:bg-secondary/20 text-secondary text-[11px] border border-secondary/30 flex items-center justify-between cursor-pointer"
+                        >
+                          <span>Show Track</span>
+                          <span className="material-symbols-outlined text-[14px]">visibility</span>
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              );
+            }
 
             // Specific subtitle
             const subtitle = trackId === 'rna' || trackId === 'atac'
@@ -545,7 +605,17 @@ export const GenomicCanvas: React.FC<GenomicCanvasProps> = ({
           {/* Data Tracks (Rendered strictly in TRACK_ORDER matching the left column) */}
           {TRACK_ORDER.map((trackId) => {
             const track = tracksConfig[trackId];
-            if (!track || !track.visible) return null;
+            if (!track) return null;
+
+            if (!track.visible) {
+              return (
+                <div
+                  key={trackId}
+                  className="relative shrink-0 bg-surface-container-high/20"
+                  style={{ height: '32px' }}
+                />
+              );
+            }
 
             return (
               <div key={trackId} className="relative shrink-0" style={{ height: `${track.height}px` }}>

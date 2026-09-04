@@ -1,4 +1,33 @@
-# OmniStrand
+# omnistrand
+
+<div align="center">
+  <img src="public/thumbnail.png" alt="OmniStrand Interface Thumbnail" width="75%">
+  <br/>
+  <i>An open initiative to reduce the cost and time of drug discovery for ultra-rare (N < 50) genetic conditions like MVA, leveraging AI and WebMCP.</i>
+  <br/><br/>
+  
+  ![React](https://img.shields.io/badge/React-19-0f766e?style=for-the-badge&logo=react)
+  ![TypeScript](https://img.shields.io/badge/TypeScript-5.5-3b82f6?style=for-the-badge&logo=typescript)
+  ![Vite](https://img.shields.io/badge/Vite-8.2-8b5cf6?style=for-the-badge&logo=vite)
+  ![Tailwind](https://img.shields.io/badge/TailwindCSS-4.0-2dd4bf?style=for-the-badge&logo=tailwindcss)
+  <br/><br/>
+  
+  <a href="https://youtu.be/q0ZL-lvDSyg">
+    <img src="https://img.youtube.com/vi/q0ZL-lvDSyg/maxresdefault.jpg" alt="OmniStrand Demo Video" width="800" style="border-radius: 12px; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);">
+  </a>
+  <br/>
+  <p>
+    <a href="https://youtu.be/q0ZL-lvDSyg">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/0/09/YouTube_full-color_icon_%282017%29.svg" width="24" style="vertical-align: middle;">
+    </a>
+    <span style="vertical-align: middle; margin-left: 6px; font-weight: 500;">
+      <b>omnistrand — An open initiative for an AI-native genomic workbench</b>
+    </span>
+  </p>
+</div>
+
+> [!WARNING]
+> **Experimental & Proof of Concept:** This project explores computational approaches to drug discovery. The software, data, and models provided here are strictly for educational and research purposes. They are not intended for clinical use, diagnostic applications, or as a substitute for professional medical advice.
 
 ## The Human Blueprint: A 3 GB Codebase
 

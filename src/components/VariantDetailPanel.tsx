@@ -706,10 +706,13 @@ const VariantDetailPanel: React.FC<VariantDetailPanelProps> = ({ variant, onClos
                 INFO ({Object.keys(variant.info || {}).length})
               </button>
               <button
+                disabled={sampleNames.length === 0}
                 className={`px-2 py-0.5 rounded transition-colors ${
-                  activeTab === 'format'
+                  sampleNames.length === 0
+                    ? 'opacity-50 cursor-not-allowed bg-surface-container text-on-surface-variant/50 border border-transparent'
+                    : activeTab === 'format'
                     ? 'bg-secondary/20 text-secondary border border-secondary/40'
-                    : 'bg-surface-container text-on-surface-variant hover:text-on-surface'
+                    : 'bg-surface-container text-on-surface-variant hover:text-on-surface border border-transparent'
                 }`}
                 onClick={() => setActiveTab('format')}
               >

@@ -34,17 +34,5 @@ export default defineConfig({
     host: '127.0.0.1',
     port: 5173,
     strictPort: true,
-    proxy: {
-      '/ucsc': {
-        target: 'https://hgdownload.soe.ucsc.edu',
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/ucsc/, ''),
-      },
-      '/ensembl': {
-        target: 'https://rest.ensembl.org',
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/ensembl/, ''),
-      }
-    }
   }
 })

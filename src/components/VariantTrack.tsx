@@ -69,7 +69,7 @@ export const VariantTrack: React.FC<VariantTrackProps> = ({
           <div className="absolute top-1/2 -translate-y-1/2 left-0 right-0 h-[1px] bg-outline-variant/40" />
         )}
 
-        {layoutVariants.map(({ variant, leftPercent, subRow, isPathogenic, type, af }) => {
+        {layoutVariants.map(({ variant, leftPercent, subRow, isHighQuality, type, af }) => {
           const isSelected = variant.id === selectedVariantId;
 
           // Collapsed Mode: 1D vertical density bars
@@ -88,11 +88,11 @@ export const VariantTrack: React.FC<VariantTrackProps> = ({
                   className={`w-[2px] h-[16px] -translate-x-1/2 transition-all ${
                     isSelected
                       ? 'bg-secondary w-[3px] h-[20px] shadow-[0_0_8px_rgba(97,219,180,0.8)] z-30'
-                      : isPathogenic
-                      ? 'bg-error opacity-80 hover:opacity-100'
+                      : isHighQuality
+                      ? 'bg-primary opacity-80 hover:opacity-100'
                       : 'bg-secondary-fixed opacity-70 hover:opacity-100'
                   }`}
-                  style={!isPathogenic && !isSelected && color ? { backgroundColor: color } : undefined}
+                  style={!isHighQuality && !isSelected && color ? { backgroundColor: color } : undefined}
                 />
               </div>
             );
@@ -117,11 +117,11 @@ export const VariantTrack: React.FC<VariantTrackProps> = ({
                   className={`w-2 h-2 rotate-45 -translate-x-1/2 transition-transform ${
                     isSelected
                       ? 'bg-secondary scale-150 shadow-[0_0_8px_rgba(97,219,180,0.8)] z-30'
-                      : isPathogenic
-                      ? 'bg-error shadow-[0_0_4px_rgba(255,180,171,0.5)]'
+                      : isHighQuality
+                      ? 'bg-primary shadow-[0_0_4px_rgba(200,200,200,0.5)]'
                       : 'bg-secondary-fixed'
                   }`}
-                  style={!isPathogenic && !isSelected && color ? { backgroundColor: color } : undefined}
+                  style={!isHighQuality && !isSelected && color ? { backgroundColor: color } : undefined}
                 />
               </div>
             );
@@ -141,12 +141,12 @@ export const VariantTrack: React.FC<VariantTrackProps> = ({
                 onSelectVariant(variant);
               }}
             >
-              {isPathogenic ? (
+              {isHighQuality ? (
                 <div
-                  className={`w-3 h-3 bg-error rotate-45 -translate-x-1/2 transition-transform ${
+                  className={`w-3 h-3 bg-primary rotate-45 -translate-x-1/2 transition-transform ${
                     isSelected
-                      ? 'shadow-[0_0_14px_rgba(255,180,171,0.9)] scale-125 ring-2 ring-error/60'
-                      : 'shadow-[0_0_8px_rgba(255,180,171,0.6)] group-hover/variant:scale-110'
+                      ? 'shadow-[0_0_14px_rgba(200,200,200,0.9)] scale-125 ring-2 ring-primary/60'
+                      : 'shadow-[0_0_8px_rgba(200,200,200,0.6)] group-hover/variant:scale-110'
                   }`}
                 />
               ) : (
@@ -174,10 +174,10 @@ export const VariantTrack: React.FC<VariantTrackProps> = ({
                   <span className="px-1.5 py-0.2 rounded bg-surface-container text-[10px] font-code-sm font-semibold uppercase">
                     {type}
                   </span>
-                  {isPathogenic ? (
-                    <span className="text-[10px] text-error font-semibold">High Quality PASS</span>
+                  {isHighQuality ? (
+                    <span className="text-[10px] text-primary font-semibold">High Quality</span>
                   ) : (
-                    <span className="text-[10px] text-on-surface-variant">{variant.filter || 'PASS'}</span>
+                    <span className="text-[10px] text-on-surface-variant">Low Quality</span>
                   )}
                 </div>
                 <p className="font-code-sm text-[10px] text-on-surface-variant">

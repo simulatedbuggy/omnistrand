@@ -89,7 +89,7 @@ export interface LayoutVariant {
   variant: ParsedVariant;
   leftPercent: number;
   subRow: number;
-  isPathogenic: boolean;
+  isHighQuality: boolean;
   type: 'SNP' | 'INDEL' | 'MNP' | 'OTHER';
   af: number | null;
 }
@@ -108,7 +108,7 @@ export function computeVariantLayout(
         variant: v,
         leftPercent: Math.max(0, Math.min(100, ((v.pos - start) / windowBp) * 100)),
         subRow: 0,
-        isPathogenic: v.filter === 'PASS' && (v.qual === null || v.qual > 30),
+        isHighQuality: v.filter === 'PASS' && (v.qual === null || v.qual > 30),
         type: (v as any).type || detectVariantType(v),
         af: extractVariantAF(v),
       })),
@@ -132,7 +132,7 @@ export function computeVariantLayout(
       variant: v,
       leftPercent,
       subRow,
-      isPathogenic: v.filter === 'PASS' && (v.qual === null || v.qual > 30),
+      isHighQuality: v.filter === 'PASS' && (v.qual === null || v.qual > 30),
       type: (v as any).type || detectVariantType(v),
       af: extractVariantAF(v),
     };

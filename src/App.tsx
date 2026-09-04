@@ -18,7 +18,8 @@ function App() {
   const [indexFile, setIndexFile] = useState<File | null>(null);
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [showExportModal, setShowExportModal] = useState(false);
-  const [locusInput, setLocusInput] = useState('chr1:15,340,000-15,345,000');
+  const [browserInput, setBrowserInput] = useState('chr1:15,340,000-15,345,000');
+  const [discoveryInput, setDiscoveryInput] = useState('');
   const [searchMessage, setSearchMessage] = useState<{ text: string, type: 'error' | 'success' } | null>(null);
   const [activeTab, setActiveTab] = useState<'browser' | 'discovery'>('browser');
   const [activeUniprotId, setActiveUniprotId] = useState<string>('');
@@ -27,6 +28,7 @@ function App() {
   const [isAiPiloting, setIsAiPiloting] = useState(false);
   const [viewerRepresentation, setViewerRepresentation] = useState<'cartoon' | 'surface' | 'ball-and-stick'>('cartoon');
   const [aiCommentary, setAiCommentary] = useState<string | null>(null);
+  const [isAiConnected, setIsAiConnected] = useState(false);
 
   // VCF engine state
   const engineRef = useRef<VcfEngine | null>(null);
@@ -258,7 +260,7 @@ function App() {
       if (res.found && res.locus && navigate) {
         const { chrom, start, end } = res.locus;
         const formattedLocus = `${chrom}:${start.toLocaleString()}-${end.toLocaleString()}`;
-        setLocusInput(formattedLocus);
+        setBrowserInput(formattedLocus);
         setSearchMessage({ text: res.message, type: 'success' });
         if (engineRef.current) {
           await queryLocus(engineRef.current, `${chrom}:${start}-${end}`);
@@ -287,11 +289,17 @@ function App() {
     }
   }, []);
 
-  // Listen for AI Piloting events
+  // Listen for AI Piloting events and initial AI connection
   useEffect(() => {
+    // Initial check for native WebMCP connection
+    if (typeof document !== 'undefined' && 'modelContext' in document && (document as any).modelContext) {
+      setIsAiConnected(true);
+    }
+
     let timeoutId: number;
     const handlePiloting = () => {
       setIsAiPiloting(true);
+      setIsAiConnected(true); // AI is definitively interacting
       window.clearTimeout(timeoutId);
       // Turn off the glowing border 2.5 seconds after the last tool call
       timeoutId = window.setTimeout(() => setIsAiPiloting(false), 2500);
@@ -307,7 +315,7 @@ function App() {
   useEffect(() => {
     registerWebMCPTools({
       onNavigate: async (chrom, start, end) => {
-        setLocusInput(`${chrom}:${start.toLocaleString()}-${end.toLocaleString()}`);
+        setBrowserInput(`${chrom}:${start.toLocaleString()}-${end.toLocaleString()}`);
         if (engineRef.current) {
           await queryLocus(engineRef.current, `${chrom}:${start}-${end}`);
         } else {
@@ -323,7 +331,7 @@ function App() {
         const newStart = Math.max(1, Math.floor(center - newWindowSize / 2));
         const newEnd = Math.floor(center + newWindowSize / 2);
         const newLocusStr = `${current.chrom}:${newStart}-${newEnd}`;
-        setLocusInput(`${current.chrom}:${newStart.toLocaleString()}-${newEnd.toLocaleString()}`);
+        setBrowserInput(`${current.chrom}:${newStart.toLocaleString()}-${newEnd.toLocaleString()}`);
         await queryLocus(engineRef.current, newLocusStr);
       },
       onPan: async (deltaBp) => {
@@ -332,7 +340,7 @@ function App() {
         const newStart = Math.max(1, current.start + deltaBp);
         const newEnd = current.end + deltaBp;
         const newLocusStr = `${current.chrom}:${newStart}-${newEnd}`;
-        setLocusInput(`${current.chrom}:${newStart.toLocaleString()}-${newEnd.toLocaleString()}`);
+        setBrowserInput(`${current.chrom}:${newStart.toLocaleString()}-${newEnd.toLocaleString()}`);
         await queryLocus(engineRef.current, newLocusStr);
       },
       onSetTrackHeight: handleSetTrackHeight,
@@ -408,8 +416,58 @@ function App() {
         }
         return summary;
       },
-      generateTrack1Csv: () => {
-        return { success: true, message: 'Track 1 CSV generated', csv: 'dummy_csv_content' };
+      exportClinicalFindingsCsv: (args: { primaryVariantId: string; secondaryVariantId?: string; epcr: number; findingType: string; notes?: string }) => {
+        const { primaryVariantId, secondaryVariantId, epcr, findingType, notes } = args;
+        const allVars = variantsRef.current || [];
+        
+        const primary = allVars.find(v => v.id === primaryVariantId);
+        const secondary = secondaryVariantId ? allVars.find(v => v.id === secondaryVariantId) : null;
+        
+        if (!primary) {
+          return { success: false, message: `Primary variant not found: ${primaryVariantId}` };
+        }
+
+        const escapeCsv = (str: any) => {
+          if (str === null || str === undefined) return '""';
+          const escaped = String(str).replace(/"/g, '""');
+          // Prevent CSV formula injection (CWE-1236)
+          if (/^[@=+\-]/.test(escaped)) {
+            return `"'${escaped}"`;
+          }
+          return `"${escaped}"`;
+        };
+
+        const headers = ["FindingType", "VariantID", "Chrom", "Pos", "Ref", "Alt", "Gene", "EPCR", "Notes"];
+        
+        const formatRow = (variant: any, fType: string) => {
+          const gene = variant.info?.GENE || variant.info?.SYMBOL || '';
+          return [
+            escapeCsv(fType),
+            escapeCsv(variant.id),
+            escapeCsv(variant.chrom),
+            escapeCsv(variant.pos),
+            escapeCsv(variant.ref),
+            escapeCsv(variant.alt.join(',')),
+            escapeCsv(gene),
+            escapeCsv(epcr?.toString() || ''),
+            escapeCsv(notes || '')
+          ].join(',');
+        };
+
+        const rows = [headers.join(',')];
+        rows.push(formatRow(primary, findingType || 'primary'));
+        
+        if (secondary) {
+          rows.push(formatRow(secondary, 'secondary'));
+        }
+
+        const csvContent = rows.join('\n');
+        
+        return { 
+          success: true, 
+          message: 'Clinical findings CSV generated successfully', 
+          csv: csvContent 
+        };
       },
       onSwitchTab: (tabId: string) => {
         if (tabId === 'browser' || tabId === 'discovery') {
@@ -462,12 +520,12 @@ function App() {
       engineRef.current = engine;
       const samples = engine.getSampleNames();
       setSampleName(samples[0] || vcfFile.name);
-      await queryLocus(engine, locusInput);
+      await queryLocus(engine, browserInput);
     } catch (err: any) {
       console.error('Failed to load VCF:', err);
       setIsLoading(false);
     }
-  }, [vcfFile, indexFile, locusInput, queryLocus]);
+  }, [vcfFile, indexFile, browserInput, queryLocus]);
 
   const handleLocusSearch = useCallback(
     async (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -475,7 +533,8 @@ function App() {
         setIsLoading(true);
         setSearchMessage(null);
         try {
-          const query = locusInput.trim();
+          const currentInput = activeTab === 'browser' ? browserInput : discoveryInput;
+          const query = currentInput.trim();
           if (!query) return;
 
           if (activeTab === 'discovery') {
@@ -490,7 +549,7 @@ function App() {
               if (data.results && data.results.length > 0) {
                 const resolvedId = data.results[0].primaryAccession;
                 setActiveUniprotId(resolvedId);
-                setLocusInput(resolvedId);
+                setDiscoveryInput(resolvedId);
                 setSearchMessage({ text: `Resolved ${query.toUpperCase()} to ${resolvedId}`, type: 'success' });
               } else {
                 setSearchMessage({ text: `No protein structure found for gene: ${query}`, type: 'error' });
@@ -502,7 +561,7 @@ function App() {
             if (res.found && res.locus) {
               const { chrom, start, end } = res.locus;
               const formatted = `${chrom}:${start.toLocaleString()}-${end.toLocaleString()}`;
-              setLocusInput(formatted);
+              setBrowserInput(formatted);
               setSearchMessage({ text: res.message, type: 'success' });
               if (engineRef.current) {
                 await queryLocus(engineRef.current, `${chrom}:${start}-${end}`);
@@ -527,7 +586,7 @@ function App() {
         }
       }
     },
-    [locusInput, queryLocus, activeTab]
+    [browserInput, discoveryInput, queryLocus, activeTab]
   );
 
   const handlePan = useCallback(
@@ -536,7 +595,7 @@ function App() {
       const newStart = Math.max(1, currentLocus.start + deltaBp);
       const newEnd = currentLocus.end + deltaBp;
       const newLocusStr = `${currentLocus.chrom}:${newStart}-${newEnd}`;
-      setLocusInput(`${currentLocus.chrom}:${newStart.toLocaleString()}-${newEnd.toLocaleString()}`);
+      setBrowserInput(`${currentLocus.chrom}:${newStart.toLocaleString()}-${newEnd.toLocaleString()}`);
       await queryLocus(engineRef.current, newLocusStr);
     },
     [currentLocus, isLoading, queryLocus]
@@ -551,7 +610,7 @@ function App() {
       const newStart = Math.max(1, Math.floor(center - newWindowSize / 2));
       const newEnd = Math.floor(center + newWindowSize / 2);
       const newLocusStr = `${currentLocus.chrom}:${newStart}-${newEnd}`;
-      setLocusInput(`${currentLocus.chrom}:${newStart.toLocaleString()}-${newEnd.toLocaleString()}`);
+      setBrowserInput(`${currentLocus.chrom}:${newStart.toLocaleString()}-${newEnd.toLocaleString()}`);
       await queryLocus(engineRef.current, newLocusStr);
     },
     [currentLocus, isLoading, queryLocus]
@@ -580,8 +639,8 @@ function App() {
       {/* TopNavBar */}
       <header className={`bg-background/70 backdrop-blur-md fixed top-0 w-full z-50 border-b border-outline-variant flat no shadows ${showreelClass}`} style={getShowreelStyle(0, 100)}>
         <div className="bg-teal-500 text-gray-900 text-center py-0.5 text-[11px] font-bold uppercase tracking-wider flex items-center justify-center gap-1.5">
-          <span className="material-symbols-outlined text-[13px]">warning</span>
-          ALERT: Vibecoded, project is entirely vibecoded with little to no steering.
+          <span className="material-symbols-outlined text-[13px]">science</span>
+          Experimental Proof of Concept — Not a finished product or advised for real-world use cases.
         </div>
         <div className="flex justify-between items-center px-lg h-16 max-w-container-max mx-auto">
           <div className="flex items-center gap-6">
@@ -598,8 +657,8 @@ function App() {
                 className="w-full bg-surface-container-high border border-outline-variant rounded-full py-2 pl-10 pr-10 text-on-surface focus:outline-none focus:border-secondary focus:ring-1 focus:ring-secondary transition-all font-body-sm text-body-sm placeholder:text-on-surface-variant"
                 placeholder={activeTab === 'browser' ? "Search locus, gene (e.g. BUB1B, BRCA1), or position..." : "Search structure by Gene (e.g. BRCA1) or UniProt ID..."}
                 type="text"
-                value={locusInput}
-                onChange={(e) => setLocusInput(e.target.value)}
+                value={activeTab === 'browser' ? browserInput : discoveryInput}
+                onChange={(e) => activeTab === 'browser' ? setBrowserInput(e.target.value) : setDiscoveryInput(e.target.value)}
                 onKeyDown={handleLocusSearch}
               />
               {isLoading && (
@@ -614,18 +673,18 @@ function App() {
             </div>
           </div>
           <nav className="hidden md:flex gap-6 items-center">
-            <a 
+            <button 
               className={`cursor-pointer px-3 py-2 font-body-md text-body-md transition-colors ${activeTab === 'browser' ? 'text-primary font-bold border-b-2 border-primary pb-1' : 'text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high rounded-md'}`}
               onClick={() => setActiveTab('browser')}
             >
               Genome Browser
-            </a>
-            <a 
+            </button>
+            <button 
               className={`cursor-pointer px-3 py-2 font-body-md text-body-md transition-colors ${activeTab === 'discovery' ? 'text-primary font-bold border-b-2 border-primary pb-1' : 'text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high rounded-md'}`}
               onClick={() => setActiveTab('discovery')}
             >
               Discovery
-            </a>
+            </button>
           </nav>
           <div className="flex items-center gap-4">
             <button
@@ -636,17 +695,17 @@ function App() {
               <span className="material-symbols-outlined text-[20px]">upload_file</span>
               <span className="font-label-md font-medium">Upload VCF</span>
             </button>
-            <button className="text-on-surface-variant hover:text-on-surface transition-colors p-2 rounded-full hover:bg-surface-container-high cursor-pointer">
-              <span className="material-symbols-outlined">settings</span>
-            </button>
-            <button className="text-on-surface-variant hover:text-on-surface transition-colors p-2 rounded-full hover:bg-surface-container-high cursor-pointer">
-              <span className="material-symbols-outlined">help</span>
-            </button>
-            <img
-              alt="User profile"
-              className="w-8 h-8 rounded-full border border-outline-variant object-cover"
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuCqpieVA5g4yzioxFYL8wghj_q1MqvJiHLToNFIRm-XNuW06iu0irEWIqXa59gRpI2IVAqjwOXhh75-jXAlilH7SYMESppLUuu2N9ZbKKf1BaoHd1DW-w-m7STfp8XTjhR52S_gSNea5DUhmAFRHYoNdR7-4cURmwqXbBHeFXn6XkMutmUTs7dzxgd-8WPBHadZ4hdxvgBIOLGaF2jR28xkYMZc97zrGC_y3W9lwOoH27it0ZWbRT4_0g"
-            />
+            <a
+              href="https://github.com/simulatedbuggy/omnistrand"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-on-surface-variant hover:text-on-surface transition-colors p-2 rounded-full hover:bg-surface-container-high cursor-pointer flex items-center justify-center"
+              title="View Source on GitHub"
+            >
+              <svg height="24" width="24" viewBox="0 0 16 16" fill="currentColor">
+                <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path>
+              </svg>
+            </a>
           </div>
         </div>
       </header>
@@ -667,7 +726,7 @@ function App() {
                       onChange={(e) => {
                         const chrom = e.target.value;
                         const newLocusStr = `${chrom}:${currentLocus.start}-${currentLocus.end}`;
-                        setLocusInput(`${chrom}:${currentLocus.start.toLocaleString()}-${currentLocus.end.toLocaleString()}`);
+                        setBrowserInput(`${chrom}:${currentLocus.start.toLocaleString()}-${currentLocus.end.toLocaleString()}`);
                         if (engineRef.current) {
                           queryLocus(engineRef.current, newLocusStr);
                         } else {
@@ -692,9 +751,6 @@ function App() {
                     <span className="material-symbols-outlined text-[16px]">file_download</span>
                     Export
                   </button>
-                  <button className="px-4 py-1.5 rounded bg-secondary text-on-secondary font-label-md text-label-md hover:brightness-110 transition-all font-semibold cursor-pointer">
-                    Share View
-                  </button>
                 </div>
               </div>
 
@@ -704,6 +760,7 @@ function App() {
                 onChange={setVariantFilters}
                 totalCount={variants.length}
                 filteredCount={filteredVariants.length}
+                disabled={engineRef.current === null || variants.length === 0}
               />
 
               {/* Master Genomic Canvas */}
@@ -754,6 +811,7 @@ function App() {
               viewerRepresentation={viewerRepresentation}
               aiCommentary={aiCommentary}
               onLoadStructure={setActiveUniprotId}
+              isAiConnected={isAiConnected}
             />
           )}
         </main>

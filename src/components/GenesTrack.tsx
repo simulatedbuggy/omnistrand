@@ -75,7 +75,7 @@ export const GenesTrack: React.FC<GenesTrackProps> = ({
 
   return (
     <div
-      className="relative shrink-0 border-t border-outline-variant/50 bg-surface-container overflow-hidden select-none"
+      className="relative shrink-0 border-t border-outline-variant/50 bg-surface-container select-none"
       style={{ height: `${height}px` }}
     >
       {isLoading && (
@@ -97,7 +97,7 @@ export const GenesTrack: React.FC<GenesTrackProps> = ({
 
           const topPos = displayMode === 'collapsed'
             ? height / 2 - 4
-            : Math.min(height - 16, rowIndex * rowHeight + (displayMode === 'squished' ? 4 : 10));
+            : Math.min(height - 16, rowIndex * rowHeight + 14);
 
           const boxHeight = displayMode === 'collapsed' ? 6 : displayMode === 'squished' ? 4 : 8;
 

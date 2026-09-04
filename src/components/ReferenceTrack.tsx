@@ -76,8 +76,8 @@ const ReferenceTrack: React.FC<ReferenceTrackProps> = ({ chrom, start, end, widt
       <div className="absolute inset-0 w-full h-full" style={trackStyles}>
         {sequence && sequence.split('').map((base, idx) => {
           const pos = start + idx;
-          const percent = ((pos - start) / windowBp) * 100;
-          const blockWidth = (1 / windowBp) * 100;
+          const percent = ((pos - start) / sequence.length) * 100;
+          const blockWidth = (1 / sequence.length) * 100;
           
           return (
             <div 
